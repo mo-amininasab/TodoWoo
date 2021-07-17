@@ -56,9 +56,9 @@ class login_user(View):
 ########################################################
 
 def current_todos(request):
-    todos = Todo.objects.all()
+    todos = Todo.objects.filter(user=request.user, completed_at__isnull=True).order_by('-created_at')
 
-    return render(request, 'todo/currenttodos.html', {'toods': todos})
+    return render(request, 'todo/currenttodos.html', {'todos': todos})
 
 
 class create_todo(View):
