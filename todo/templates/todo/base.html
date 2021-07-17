@@ -11,13 +11,39 @@
 
 </head>
 <body>
-    <nav class="bg-gray-800 mb-4">
+    <!-- <nav class="bg-gray-800 mb-4">
         <div class="px-4 py-2 items-center text-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg">
             <a class="block mx-auto my-2 w-56 text-white font-semibold text-2xl" href="#">PasswordGenerator</a>
             <a class="block mx-auto my-2 w-20  text-gray-50  hover:text-pink-300" href="#">About me</a>
 
         </div>
+    </nav> -->
+
+    <nav class="bg-gray-800 py-2">
+        <div class="text-center sm:hidden">
+          <p class="text-white font-semibold text-2xl">TodoWoo</p>
+
+        </div>
+        <div class="flex max-w-7xl mx-auto py-2 px-6 sm:px-12 lg:px-8 space-x-6 items-center">
+            <div class="flex space-x-2">
+                <p class="hidden sm:block text-white font-semibold text-2xl">TodoWoo</p>
+                <a class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium " href="{% url 'todo:current_page' %}">Todos</a>
+            </div>
+
+            <div class="flex">
+                {% if user.is_authenticated %}
+                <!-- Logged In as <span class="right-0 text-semibold"> {{user.username}}</span> -->
+                <form action="{% url 'todo:logout_page' %}" method="POST">{% csrf_token %}
+                    <button class="text-gray-300 text-sm px-3 py-2 font-medium rounded-md hover:bg-gray-500 hover:text-white">Logout</button>
+                </form>
+                {% else %}
+                    <a class="text-gray-300 text-sm px-3 py-2 font-medium rounded-md hover:bg-gray-500 hover:text-white" href="{% url 'todo:login_page' %}">Login</a>
+                    <a class="text-gray-300 text-sm px-3 py-2 font-medium rounded-md hover:bg-gray-500 hover:text-white" href="{% url 'todo:signup_page' %}">Signup</a>
+                {% endif %}
+            </div>
+            
     </nav>
+
 
 
     {% block content %}
