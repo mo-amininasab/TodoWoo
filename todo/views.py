@@ -3,9 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
-
-def current_todos(request):
-    return render(request, 'todo/currenttodos.html', {})
+from .forms import TodoForm
+from .models import Todo
 
 ######################################################## Authenticate
 class signup_user(View):
@@ -33,7 +32,8 @@ class signup_user(View):
 class logout_user(View):
     def post(self, request):
         logout(request)
-        return redirect('/current/')
+        return redirect('/login/')
+
 
 class login_user(View):
     def get(self, request):
@@ -51,7 +51,30 @@ class login_user(View):
 
         else:
             login(request, user)
-            return redirect('/current/')
+            return redirect('/createtodo/')
 
 ########################################################
 
+def current_todos(request):
+    todos = Todo.objects.all()
+
+    return render(request, 'todo/currenttodos.html', {'toods': todos})
+
+
+class create_todo(View):
+    def get(self, request):
+        return  render(request, 'todo/create_todo.html', {})
+
+    def post(self, request):
+        # ??????????????????
+        try:
+            form = TodoForm(request.POST)
+            new_todo = form.save(commit=False)
+            new_todo.user = request.user
+            new_todo.save()
+        except ValueError:
+            return  render(request, 'todo/create_todo.html', {'bad_date_error': 'Bad data passed in. Try again.'})
+
+        # form.save()
+        # return render(request, 'todo/create_todo.html', {'user': form.is_valid()})
+        return redirect('/createtodo/')

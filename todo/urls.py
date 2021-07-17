@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import  signup_user, current_todos, logout_user, login_user
+from .views import  signup_user, current_todos, logout_user, login_user, create_todo
 
 app_name = 'todo'
 
@@ -11,4 +11,5 @@ urlpatterns = [
 
     # Todos
     path('current/', current_todos, name='current_page'),
+    path('createtodo/', create_todo.as_view(), name='create_todo_page'),
 ]
