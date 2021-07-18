@@ -28,12 +28,23 @@
             </div>
             
       
-            <button type="submit" class="group relative w-1/2 mx-auto flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button type="submit" class="group mb-6 relative w-1/2 mx-auto flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                 </span>
                 Update
             </button>
       </form>
+
+      <form action="{% url 'todo:delete_todo_page' todo.id %}" method="POST">{% csrf_token %}
+          <button type="submit" class="mt-4 group relative w-1/2 mx-auto flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+            </span>
+            Delete
+        </button>
+
+      </form>
+
+
 
       </div>
 </div>

@@ -1,16 +1,18 @@
 from django.urls import path
-from .views import  signup_user, current_todos, logout_user, login_user, create_todo, viewtodo
-
+from . import views
 app_name = 'todo'
 
 urlpatterns = [
     # Auth
-    path('signup/', signup_user.as_view(), name='signup_page'),
-    path('logout/', logout_user.as_view(), name='logout_page'),
-    path('login/', login_user.as_view(), name='login_page'),
+    path('signup/', views.signup_user.as_view(), name='signup_page'),
+    path('logout/', views.logout_user.as_view(), name='logout_page'),
+    path('login/', views.login_user.as_view(), name='login_page'),
 
     # Todos
-    path('current/', current_todos, name='current_page'),
-    path('current/<int:todo_pk>/', viewtodo, name='todo_detail_page'),
-    path('createtodo/', create_todo.as_view(), name='create_todo_page'),
+    path('createtodo/', views.create_todo.as_view(), name='create_todo_page'),
+    path('current/', views.current_todos, name='current_page'),
+    path('current/<int:todo_pk>/', views.TodoDetail.as_view(), name='todo_detail_page'),
+    path('current/<int:todo_pk>/complete/', views.CompleteTodo.as_view(), name='complete_todo_page'),
+    path('current/<int:todo_pk>/delete/', views.DeleteTodo.as_view(), name='delete_todo_page'),
+    path('completed/', views.CompletedTodos.as_view(), name='completed_todos_page'),
 ]

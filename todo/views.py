@@ -1,10 +1,11 @@
 from django.views import View
-from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from .forms import TodoForm
 from .models import Todo
+from django.utils import timezone
 
 ######################################################## Authenticate
 class signup_user(View):
@@ -20,7 +21,7 @@ class signup_user(View):
                 user = User.objects.create_user(username=username, password=password)
                 login(request, user)
 
-                return redirect('/current/')
+                return redirect('/createtodo/')
             except IntegrityError:
 
                 return render(request, 'todo/signupuser.html', {'been_taken_error': 'That username had already been taken.'})
@@ -60,6 +61,11 @@ def current_todos(request):
 
     return render(request, 'todo/currenttodos.html', {'todos': todos})
 
+class CompletedTodos(View):
+    def get(self, request):
+        todos = Todo.objects.filter(user=request.user, completed_at__isnull=False).order_by('-created_at')
+
+        return render(request, 'todo/completed_todos.html', {'todos': todos})
 
 class create_todo(View):
     def get(self, request):
@@ -79,10 +85,41 @@ class create_todo(View):
         # return render(request, 'todo/create_todo.html', {'user': form.is_valid()})
         return redirect('/createtodo/')
 
-def viewtodo(request, todo_pk):
-    # todo = get_list_or_404(Todo, pk=todo_pk)
-    todo = Todo.objects.get(pk=todo_pk)
+class TodoDetail(View):
+    def get(self, request, todo_pk):
+        todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+        
+        return render(request, 'todo/todo_detail.html', {'todo': todo})
     
+    def post(self, request, todo_pk):
+        todo = Todo.objects.get(pk=todo_pk)
+        try:
+            form = TodoForm(request.POST, instance=todo)
+            form.save()
+            # instead of the code down below, use the code up here.
+            # if form.is_valid():
+            #     todo.title = form.cleaned_data['title']
+            #     todo.memo = form.cleaned_data['memo']
+            #     todo.important = form.cleaned_data['important']
+            #     todo.save()
+                
+        except ValueError:
+            return  render(request, 'todo/todo_detail.html', {'todo': todo, 'bad_date_error': 'Bad data passed in. Try again.'})
 
-    return render(request, 'todo/todo_detail.html', {'todo': todo})
-    
+        return redirect('/current/')
+
+class CompleteTodo(View):
+    def post(self, request, todo_pk):
+        todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+        todo.completed_at = timezone.now()
+        todo.save()
+
+        return redirect('/current/')
+
+class DeleteTodo(View):
+    def post(self, request, todo_pk):
+        todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+        todo.delete()
+
+        return redirect('/current/')
+

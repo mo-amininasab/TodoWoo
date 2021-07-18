@@ -16,7 +16,7 @@
                 <div class="group flex flex-col mb-6 bg-yellow-100 px-4 py-4 rounded-md hover:bg-yellow-50">
                     <h1 class="text-yellow-600 text-xl mb-3 font-semibold">{{todo.title}}</h1>
                     <p class="text-yellow-500 break-all mb-4">{{todo.memo}}</p>
-                    <form action="{% url 'todo:current_page' %}" class="text-center">{% csrf_token %}
+                    <form action="{% url 'todo:complete_todo_page' todo.id %}" method="POST" class="text-center">{% csrf_token %}
                         <button class="bg-yellow-600 w-min mx-auto px-3 py-2 rounded-md text-white font-semibold hover:bg-yellow-900">Done</button>
                     </form>
                 </div>
@@ -26,7 +26,7 @@
                 <div class="flex flex-col mb-6 bg-blue-100 px-4 py-4 rounded-md hover:bg-blue-50">
                     <h1 class="text-blue-600 text-xl mb-3 font-semibold">{{todo.title}}</h1>
                     <p class="text-blue-500 break-all mb-4">{{todo.memo}}</p>
-                    <form action="{% url 'todo:current_page' %}" class="text-center">{% csrf_token %}
+                    <form action="{% url 'todo:complete_todo_page' todo.id %}" method="POST" class="text-center">{% csrf_token %}
                         <button class="bg-blue-600 w-min mx-auto px-3 py-2 rounded-md text-white font-semibold hover:bg-blue-900">Done</button>
                     </form>
                 </div>
