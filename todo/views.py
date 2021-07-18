@@ -1,5 +1,5 @@
 from django.views import View
-from django.shortcuts import render, redirect
+from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
@@ -78,3 +78,11 @@ class create_todo(View):
         # form.save()
         # return render(request, 'todo/create_todo.html', {'user': form.is_valid()})
         return redirect('/createtodo/')
+
+def viewtodo(request, todo_pk):
+    # todo = get_list_or_404(Todo, pk=todo_pk)
+    todo = Todo.objects.get(pk=todo_pk)
+    
+
+    return render(request, 'todo/todo_detail.html', {'todo': todo})
+    
