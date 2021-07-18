@@ -6,6 +6,8 @@ from django.contrib.auth import login, logout, authenticate
 from .forms import TodoForm
 from .models import Todo
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 ######################################################## Authenticate
 class signup_user(View):
@@ -29,8 +31,8 @@ class signup_user(View):
         else:
             return render(request, 'todo/signupuser.html', {'not_match_error': 'Passwords did not match.'})
 
-
 class logout_user(View):
+    @method_decorator(login_required(login_url='/login/'))
     def post(self, request):
         logout(request)
         return redirect('/login/')
@@ -57,21 +59,24 @@ class login_user(View):
 ########################################################
 
 
-def current_todos(request):
-    todos = Todo.objects.filter(user=request.user, completed_at__isnull=True).order_by('-created_at')
+class current_todos(View):
+    @method_decorator(login_required(login_url='/login/'))
+    def get(self, request):
+        todos = Todo.objects.filter(user=request.user, completed_at__isnull=True).order_by('-created_at')
 
-    return render(request, 'todo/currenttodos.html', {'todos': todos})
-
+        return render(request, 'todo/currenttodos.html', {'todos': todos})
 class CompletedTodos(View):
+    @method_decorator(login_required(login_url='/login/'))
     def get(self, request):
         todos = Todo.objects.filter(user=request.user, completed_at__isnull=False).order_by('-created_at')
 
         return render(request, 'todo/completed_todos.html', {'todos': todos})
-
-class create_todo(View):
+class CreateTodo(View):
+    @method_decorator(login_required(login_url='/login/'))
     def get(self, request):
         return  render(request, 'todo/create_todo.html', {})
 
+    @method_decorator(login_required(login_url='/login/'))
     def post(self, request):
         # ??????????????????
         try:
@@ -85,13 +90,13 @@ class create_todo(View):
         # form.save()
         # return render(request, 'todo/create_todo.html', {'user': form.is_valid()})
         return redirect('/createtodo/')
-
 class TodoDetail(View):
+    @method_decorator(login_required(login_url='/login/'))
     def get(self, request, todo_pk):
         todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
         
         return render(request, 'todo/todo_detail.html', {'todo': todo})
-    
+    @method_decorator(login_required(login_url='/login/'))
     def post(self, request, todo_pk):
         todo = Todo.objects.get(pk=todo_pk)
         try:
@@ -108,16 +113,16 @@ class TodoDetail(View):
             return  render(request, 'todo/todo_detail.html', {'todo': todo, 'bad_date_error': 'Bad data passed in. Try again.'})
 
         return redirect('/current/')
-
 class CompleteTodo(View):
+    @method_decorator(login_required(login_url='/login/'))
     def post(self, request, todo_pk):
         todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
         todo.completed_at = timezone.now()
         todo.save()
 
         return redirect('/current/')
-
 class DeleteTodo(View):
+    @method_decorator(login_required(login_url='/login/'))
     def post(self, request, todo_pk):
         todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
         todo.delete()
