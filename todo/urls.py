@@ -3,6 +3,8 @@ from . import views
 app_name = 'todo'
 
 urlpatterns = [
+    # Home
+    path('', views.home, name='home_page'),
     # Auth
     path('signup/', views.signup_user.as_view(), name='signup_page'),
     path('logout/', views.logout_user.as_view(), name='logout_page'),

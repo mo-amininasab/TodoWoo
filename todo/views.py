@@ -58,12 +58,13 @@ class login_user(View):
 
 ########################################################
 
+def home(request):
+    return render(request, 'todo/home.html', {})
 
 class current_todos(View):
     @method_decorator(login_required)
     def get(self, request):
         todos = Todo.objects.filter(user=request.user, completed_at__isnull=True).order_by('-created_at')
-
         return render(request, 'todo/currenttodos.html', {'todos': todos})
 class CompletedTodos(View):
     @method_decorator(login_required)
