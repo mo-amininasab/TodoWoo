@@ -9,10 +9,11 @@
             </div>
             
     {% for todo in todos %}
-        <div class="justify-start  px-4 sm:px-6 lg:px-8">
+        <div class="justify-start px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col mb-6 bg-green-100 px-4 py-4 rounded-md">
                 <h1 class="text-green-600 text-xl mb-3 font-semibold">{{todo.title}}</h1>
                 <p class="text-green-500 break-all mb-4">{{todo.memo}}</p>
+                <p class="text-green-500 text-xs">completed at: {{todo.completed_at|date:'M j Y H:i'}}</p>
             </div>
             
         </div>

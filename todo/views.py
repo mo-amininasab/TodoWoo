@@ -56,6 +56,7 @@ class login_user(View):
 
 ########################################################
 
+
 def current_todos(request):
     todos = Todo.objects.filter(user=request.user, completed_at__isnull=True).order_by('-created_at')
 
