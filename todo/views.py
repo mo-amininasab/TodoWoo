@@ -32,7 +32,7 @@ class signup_user(View):
             return render(request, 'todo/signupuser.html', {'not_match_error': 'Passwords did not match.'})
 
 class logout_user(View):
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def post(self, request):
         logout(request)
         return redirect('/login/')
@@ -60,23 +60,23 @@ class login_user(View):
 
 
 class current_todos(View):
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def get(self, request):
         todos = Todo.objects.filter(user=request.user, completed_at__isnull=True).order_by('-created_at')
 
         return render(request, 'todo/currenttodos.html', {'todos': todos})
 class CompletedTodos(View):
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def get(self, request):
         todos = Todo.objects.filter(user=request.user, completed_at__isnull=False).order_by('-created_at')
 
         return render(request, 'todo/completed_todos.html', {'todos': todos})
 class CreateTodo(View):
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def get(self, request):
         return  render(request, 'todo/create_todo.html', {})
 
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def post(self, request):
         # ??????????????????
         try:
@@ -91,12 +91,12 @@ class CreateTodo(View):
         # return render(request, 'todo/create_todo.html', {'user': form.is_valid()})
         return redirect('/createtodo/')
 class TodoDetail(View):
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def get(self, request, todo_pk):
         todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
         
         return render(request, 'todo/todo_detail.html', {'todo': todo})
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def post(self, request, todo_pk):
         todo = Todo.objects.get(pk=todo_pk)
         try:
@@ -114,7 +114,7 @@ class TodoDetail(View):
 
         return redirect('/current/')
 class CompleteTodo(View):
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def post(self, request, todo_pk):
         todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
         todo.completed_at = timezone.now()
@@ -122,7 +122,7 @@ class CompleteTodo(View):
 
         return redirect('/current/')
 class DeleteTodo(View):
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def post(self, request, todo_pk):
         todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
         todo.delete()
